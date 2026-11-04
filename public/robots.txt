@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jayytech.vercel.app/sitemap.xml
