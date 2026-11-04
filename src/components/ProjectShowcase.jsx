@@ -245,6 +245,10 @@ const projectCategories = [
     },
 ];
 
+/* Unsplash: let the CDN serve WebP/AVIF at a sensible quality */
+const optimizeImage = (url) =>
+    url.includes("images.unsplash.com") && !url.includes("auto=format") ? `${url}&auto=format&q=70` : url;
+
 /* ─────────────────────────────────────────────
    ANIMATION VARIANTS
    ───────────────────────────────────────────── */
@@ -279,6 +283,8 @@ const scaleIn = {
 
 const CategoryTabs = ({ categories, activeCategory, onCategoryChange }) => (
     <motion.div
+        role="group"
+        aria-label="Filter projects by category"
         className="showcase-tabs"
         initial="hidden"
         whileInView="visible"
@@ -286,17 +292,23 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }) => (
         variants={fadeUp}
     >
         <button
+            type="button"
             className={`showcase-tab ${activeCategory === "all" ? "active" : ""}`}
             onClick={() => onCategoryChange("all")}
+            aria-pressed={activeCategory === "all"}
+            aria-label="All Work"
         >
             <Sparkles size={16} />
             <span>All Work</span>
         </button>
         {categories.map((cat) => (
             <button
+                type="button"
                 key={cat.id}
                 className={`showcase-tab ${activeCategory === cat.id ? "active" : ""}`}
                 onClick={() => onCategoryChange(cat.id)}
+                aria-pressed={activeCategory === cat.id}
+                aria-label={cat.title}
             >
                 {cat.icon}
                 <span>{cat.title}</span>
@@ -314,22 +326,23 @@ const ProjectCard = ({ project, featured }) => {
     const hasCodeLink = project.codeLink && project.codeLink !== "#";
 
     return (
-        <motion.div
+        <motion.article
             className={`showcase-card ${featured ? "showcase-card--featured" : ""}`}
             variants={scaleIn}
-            whileHover={{ y: -8 }}
-            transition={{ duration: 0.3 }}
         >
             {/* Image area */}
             <div className="showcase-card__image-wrapper">
                 <img
-                    src={project.imageURL}
-                    alt={project.title}
+                    src={optimizeImage(project.imageURL)}
+                    alt={`${project.title} preview`}
                     className="showcase-card__image"
+                    width="800"
+                    height="600"
                     loading="lazy"
+                    decoding="async"
                 />
                 {/* Gradient overlay */}
-                <div className="showcase-card__overlay" />
+                <div className="showcase-card__overlay" aria-hidden="true" />
 
                 {/* Hover actions */}
                 <div className="showcase-card__actions">
@@ -342,7 +355,7 @@ const ProjectCard = ({ project, featured }) => {
                         >
                             <ExternalLink size={15} />
                             <span>View Live Project</span>
-                            <div className="showcase-card__btn-glow" />
+                            <span className="showcase-card__btn-glow" aria-hidden="true" />
                         </a>
                     ) : (
                         <a
@@ -352,7 +365,7 @@ const ProjectCard = ({ project, featured }) => {
                         >
                             <ExternalLink size={15} />
                             <span>Demo on Request</span>
-                            <div className="showcase-card__btn-glow" />
+                            <span className="showcase-card__btn-glow" aria-hidden="true" />
                         </a>
                     )}
                     {hasCodeLink ? (
@@ -394,7 +407,7 @@ const ProjectCard = ({ project, featured }) => {
                         </span>
                     ))}
                 </div>
-                <h3 className="showcase-card__title">{project.title}</h3>
+                <h4 className="showcase-card__title">{project.title}</h4>
                 <p className="showcase-card__description">{project.description}</p>
 
                 <div className="showcase-card__footer">
@@ -417,7 +430,7 @@ const ProjectCard = ({ project, featured }) => {
                     )}
                 </div>
             </div>
-        </motion.div>
+        </motion.article>
     );
 };
 
@@ -431,7 +444,7 @@ const CategorySection = ({ category, index }) => {
     return (
         <div className="showcase-category" id={`category-${category.id}`}>
             {/* Decorative background element */}
-            <div className="showcase-category__bg-accent" />
+            <div className="showcase-category__bg-accent" aria-hidden="true" />
 
             <div className={`showcase-category__layout ${isReversed ? "reversed" : ""}`}>
                 {/* ── Header & Hook ── */}
@@ -449,7 +462,7 @@ const CategorySection = ({ category, index }) => {
 
                         <span className="showcase-category__label">{category.title}</span>
 
-                        <h2 className="showcase-category__hook">{category.hook}</h2>
+                        <h3 className="showcase-category__hook">{category.hook}</h3>
 
                         <p className="showcase-category__description">
                             {category.description}

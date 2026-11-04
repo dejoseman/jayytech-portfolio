@@ -1,21 +1,37 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Theme boot: runs before first paint so there is no flash of the wrong theme.
+         Dark is the default for first-time visitors; a saved choice always wins. -->
+    <script>
+      (function () {
+        var t = 'dark';
+        try {
+          var saved = localStorage.getItem('jt-theme');
+          if (saved === 'light' || saved === 'dark') t = saved;
+        } catch (e) {}
+        var root = document.documentElement;
+        root.setAttribute('data-theme', t);
+        root.style.colorScheme = t;
+      })();
+    </script>
 
     <!-- SEO -->
-    <title>Jayy Tech | Full Stack Developer & Technology Architect</title>
-    <meta name="description" content="Premium Full Stack Developer specializing in scalable web applications, AI integration, bot development, and enterprise solutions. Based in Lagos, Nigeria." />
-    <meta name="keywords" content="full stack developer, web developer, React, Node.js, AI integration, bot development, Lagos, Nigeria" />
+    <title>Jayy Tech | Full-Stack Developer &amp; Software Engineer</title>
+    <meta name="description" content="Jayy Tech is a Full-Stack Developer and Software Engineer building scalable web applications, APIs, AI integrations and automation. Based in Lagos, Nigeria." />
+    <meta name="keywords" content="full stack developer, software engineer, web developer, React, Node.js, Python, AI integration, bot development, Lagos, Nigeria" />
     <meta name="author" content="Jayy Tech" />
-    <meta name="theme-color" content="#050510" />
+    <meta name="theme-color" content="#070b1d" />
     <meta name="robots" content="index, follow" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Jayy Tech | Full Stack Developer & Technology Architect" />
-    <meta property="og:description" content="Crafting exceptional digital experiences with cutting-edge technologies. Specializing in scalable web applications, AI integration, and enterprise solutions." />
+    <meta property="og:title" content="Jayy Tech | Full-Stack Developer &amp; Software Engineer" />
+    <meta property="og:description" content="Scalable web applications, robust APIs, AI integrations and automation — engineered end to end." />
+    <!-- TODO: add public/og-image.png (1200×630) — referenced here but not in the project yet -->
     <meta property="og:image" content="/og-image.png" />
     <!-- TODO: Update og:url with your actual domain after deployment -->
     <meta property="og:url" content="https://jayytech.vercel.app" />
@@ -23,18 +39,28 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Jayy Tech | Full Stack Developer" />
-    <meta name="twitter:description" content="Premium Full Stack Developer specializing in scalable web applications, AI integration, and enterprise solutions." />
+    <meta name="twitter:title" content="Jayy Tech | Full-Stack Developer &amp; Software Engineer" />
+    <meta name="twitter:description" content="Scalable web applications, robust APIs, AI integrations and automation — engineered end to end." />
     <meta name="twitter:image" content="/og-image.png" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Fonts (preconnect + stylesheet instead of a CSS @import chain) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
 
     <!-- Canonical URL - TODO: update with real domain -->
     <link rel="canonical" href="https://jayytech.vercel.app" />
   </head>
   <body>
+    <noscript>
+      <p style="padding:2rem;font-family:sans-serif">Jayy Tech — Full-Stack Developer &amp; Software Engineer. Please enable JavaScript to view this portfolio.</p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
