@@ -29,11 +29,19 @@ import ThemeToggle from "./ThemeToggle";
 import useTheme from "../hooks/useTheme";
 import emailjs from "@emailjs/browser";
 import logoImg from "../assets/logo/logo-mark.webp"; // 128px crop of logo1.JPG
+import { FloatingWhatsApp, WhatsAppIcon } from "./WhatsApp";
+import { ProfilePhoto } from "./Portrait";
+import { whatsappLinkProps, WHATSAPP_DISPLAY } from "../config/whatsapp";
+import { PORTRAIT } from "../config/portrait";
 
 // ── CONFIGURATION — UPDATE THESE WITH YOUR REAL INFO ──
 const env = import.meta.env;
 
 const SITE_CONFIG = {
+    // Identity: personal name for the person, Jayy Tech for the brand
+    personName: "Okechukwu Joseph",
+    brand: "Jayy Tech",
+
     // Personal links — set these in .env (local) and in Vercel → Settings → Environment Variables
     github: env.VITE_GITHUB_URL || "https://github.com/dejoseman",
     linkedin: env.VITE_LINKEDIN_URL || "https://linkedin.com/in/okechukwu-joseph",
@@ -187,8 +195,17 @@ const SectionHeader = ({ eyebrow, title, subtitle }) => (
     </motion.div>
 );
 
-const SocialLinks = ({ className = "social-btn", size = 18 }) => (
+const SocialLinks = ({ className = "social-btn", size = 18, whatsapp = false }) => (
     <>
+        {whatsapp && (
+            <a
+                {...whatsappLinkProps}
+                className={`${className} social-btn--whatsapp`}
+                aria-label="Chat on WhatsApp (opens in a new tab)"
+            >
+                <WhatsAppIcon size={size} />
+            </a>
+        )}
         <a href={SITE_CONFIG.github} target="_blank" rel="noreferrer" className={className} aria-label="GitHub profile">
             <Github size={size} aria-hidden="true" />
         </a>
@@ -430,6 +447,14 @@ const Portfolio = () => {
 
                         <div className="nav-actions">
                             <ThemeToggle theme={theme} onToggle={toggleTheme} />
+                            <a
+                                {...whatsappLinkProps}
+                                className="nav-whatsapp"
+                                aria-label="Chat on WhatsApp (opens in a new tab)"
+                                title="Chat on WhatsApp"
+                            >
+                                <WhatsAppIcon size={18} />
+                            </a>
                             <button type="button" className="btn btn-primary btn-sm nav-cta" onClick={() => scrollTo("contact")}>
                                 Hire Me <ArrowRight size={15} aria-hidden="true" />
                             </button>
@@ -495,6 +520,9 @@ const Portfolio = () => {
                     <button type="button" className="btn btn-primary drawer-cta" onClick={() => scrollTo("contact")}>
                         <Send size={16} aria-hidden="true" /> Hire Me
                     </button>
+                    <a {...whatsappLinkProps} className="btn btn-whatsapp drawer-whatsapp">
+                        <WhatsAppIcon size={18} /> Chat on WhatsApp
+                    </a>
                     <div className="drawer-socials">
                         <SocialLinks className="social-btn" />
                     </div>
@@ -517,7 +545,7 @@ const Portfolio = () => {
                                 </motion.p>
 
                                 <motion.h1 id="hero-title" className="hero-title" variants={fadeUp}>
-                                    <span className="hero-name">Jayy Tech</span>
+                                    <span className="hero-name">{SITE_CONFIG.personName}</span>
                                     <span className="hero-role">
                                         Full-Stack Developer <span className="hero-amp">&amp;</span> Software Engineer
                                     </span>
@@ -539,14 +567,57 @@ const Portfolio = () => {
                                 </motion.div>
 
                                 <motion.div className="hero-socials" variants={fadeUp}>
-                                    <SocialLinks />
+                                    <SocialLinks whatsapp />
                                     <span className="hero-location">
                                         <MapPin size={15} aria-hidden="true" /> Lagos, Nigeria · Working globally
                                     </span>
                                 </motion.div>
                             </motion.div>
 
-                            {/* Code-window visual: communicates the engineering focus without stock imagery */}
+                            {PORTRAIT ? (
+                            /* Portrait composition: photo in an accent-ringed frame, with a compact
+                               code card overlapping the corner to keep the engineering identity */
+                            <motion.div
+                                className="hero-visual hero-portrait"
+                                initial={{ opacity: 0, y: 24 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                            >
+                                <div className="hero-portrait__glow" aria-hidden="true" />
+                                <figure className="hero-portrait__frame">
+                                    <ProfilePhoto
+                                        className="hero-portrait__img"
+                                        sizes="(max-width: 640px) 230px, (max-width: 1024px) 340px, 430px"
+                                        priority
+                                    />
+                                </figure>
+
+                                <div className="hero-portrait__code" aria-hidden="true">
+                                    <div className="code-window__bar">
+                                        <span className="code-window__dots">
+                                            <i /><i /><i />
+                                        </span>
+                                        <span className="code-window__file">
+                                            <Code2 size={12} /> engineer.ts
+                                        </span>
+                                    </div>
+                                    <pre className="hero-portrait__code-body">
+                                        <code>
+                                            <span className="tk-k">const</span> <span className="tk-v">jayy</span> <span className="tk-p">=</span> {"{"}
+                                            {"\n  "}<span className="tk-prop">stack</span>: [<span className="tk-s">"React"</span>, <span className="tk-s">"Node"</span>, <span className="tk-s">"Python"</span>],
+                                            {"\n  "}<span className="tk-prop">focus</span>: [<span className="tk-s">"AI"</span>, <span className="tk-s">"Scale"</span>],
+                                            {"\n  "}<span className="tk-prop">ships</span>: <span className="tk-k">true</span>,
+                                            {"\n"}{"}"};<span className="code-caret" />
+                                        </code>
+                                    </pre>
+                                </div>
+
+                                <div className="hero-visual__chip hero-portrait__chip" aria-hidden="true">
+                                    <CheckCircle size={14} /> Production-ready
+                                </div>
+                            </motion.div>
+                            ) : (
+                            /* Code-window visual (used until a profile photo is added to src/assets/profile/) */
                             <motion.div
                                 className="hero-visual"
                                 initial={{ opacity: 0, y: 24 }}
@@ -585,6 +656,7 @@ const Portfolio = () => {
                                     <Server size={14} /> Frontend · Backend · AI
                                 </div>
                             </motion.div>
+                            )}
                         </div>
 
                         <motion.div
@@ -612,24 +684,30 @@ const Portfolio = () => {
 
                         <motion.div className="about-grid" {...inView} variants={stagger}>
                             <motion.div className="about-image-wrapper" variants={fadeUp}>
-                                {/* TODO: Replace with your actual professional headshot */}
+                                {PORTRAIT ? (
+                                    <ProfilePhoto
+                                        className="about-image about-image--portrait"
+                                        sizes="(max-width: 1024px) 360px, 440px"
+                                    />
+                                ) : (
                                 <img
                                     src="https://images.unsplash.com/photo-1607705703571-c5a8695f18f6?w=640&h=640&fit=crop&auto=format&q=75"
-                                    alt="Jayy Tech - Full Stack Developer"
+                                    alt="Okechukwu Joseph, Full-Stack Developer at Jayy Tech"
                                     className="about-image"
                                     width="640"
                                     height="640"
                                     loading="lazy"
                                     decoding="async"
                                 />
+                                )}
                                 <div className="about-image-frame" aria-hidden="true" />
                             </motion.div>
 
                             <motion.div className="about-text-content" variants={fadeUp}>
                                 <h3>Building the Future, One Line at a Time</h3>
                                 <p className="about-desc">
-                                    I'm a passionate full-stack developer with over 5 years of experience
-                                    building modern web applications, AI-powered solutions, and custom
+                                    I'm Okechukwu Joseph, the full-stack developer behind Jayy Tech, with over
+                                    5 years of experience building modern web applications, AI-powered solutions, and custom
                                     automation tools. I believe in clean, efficient code that not only works
                                     flawlessly but delivers exceptional user experiences.
                                 </p>
@@ -761,12 +839,24 @@ const Portfolio = () => {
                                 <div className="contact-info-header">
                                     <h3>Let's Build Something Amazing</h3>
                                     <p>
-                                        I'm always open to discussing new projects, creative ideas, or
-                                        opportunities to be part of your vision.
+                                        I'm Okechukwu Joseph, and I'm always open to discussing new projects,
+                                        creative ideas, or opportunities to be part of your vision.
                                     </p>
                                 </div>
 
                                 <ul className="contact-list">
+                                    <li className="contact-item">
+                                        <span className="contact-item-icon contact-item-icon--whatsapp" aria-hidden="true">
+                                            <WhatsAppIcon size={20} />
+                                        </span>
+                                        <span className="contact-item-body">
+                                            <span className="contact-item-label">WhatsApp</span>
+                                            <a {...whatsappLinkProps} className="contact-item-text contact-link">
+                                                {WHATSAPP_DISPLAY}
+                                                <span className="sr-only"> (opens WhatsApp in a new tab)</span>
+                                            </a>
+                                        </span>
+                                    </li>
                                     <li className="contact-item">
                                         <span className="contact-item-icon" aria-hidden="true"><Mail size={18} /></span>
                                         <span className="contact-item-body">
@@ -792,6 +882,16 @@ const Portfolio = () => {
                                     </li>
                                 </ul>
 
+                                <div className="contact-whatsapp-cta">
+                                    <p className="contact-whatsapp-cta__text">
+                                        Prefer a quick conversation? Message me directly on WhatsApp to discuss your project or opportunity.
+                                    </p>
+                                    <a {...whatsappLinkProps} className="btn btn-whatsapp">
+                                        <WhatsAppIcon size={18} /> Chat on WhatsApp
+                                        <ArrowRight size={16} aria-hidden="true" />
+                                    </a>
+                                </div>
+
                                 <div className="contact-socials">
                                     <SocialLinks />
                                 </div>
@@ -815,7 +915,7 @@ const Portfolio = () => {
                                     {formStatus === "error" && (
                                         <div className="form-toast form-toast--error" role="alert">
                                             <X size={18} aria-hidden="true" />
-                                            <span>Failed to send. Please email me directly or try again.</span>
+                                            <span>Failed to send. Please email me directly, message me on WhatsApp, or try again.</span>
                                         </div>
                                     )}
                                 </div>
@@ -898,7 +998,7 @@ const Portfolio = () => {
                             </span>
                             <span>
                                 <span className="footer-name">Jayy Tech</span>
-                                <span className="footer-tagline">Full-Stack Developer &amp; Software Engineer</span>
+                                <span className="footer-tagline">Okechukwu Joseph · Full-Stack Developer &amp; Software Engineer</span>
                             </span>
                         </div>
 
@@ -918,14 +1018,17 @@ const Portfolio = () => {
                         </nav>
 
                         <div className="footer-socials">
-                            <SocialLinks className="social-btn social-btn--sm" size={16} />
+                            <SocialLinks className="social-btn social-btn--sm" size={16} whatsapp />
                         </div>
                     </div>
                     <div className="footer-bottom">
-                        <span>© {new Date().getFullYear()} Jayy Tech. All rights reserved.</span>
+                        <span>© {new Date().getFullYear()} Okechukwu Joseph · Jayy Tech. All rights reserved.</span>
                         <span className="footer-built">Designed &amp; engineered in Lagos</span>
                     </div>
                 </footer>
+
+                {/* Floating WhatsApp quick-contact (hidden while the mobile drawer is open) */}
+                <FloatingWhatsApp hidden={menuOpen} />
 
                 {/* Scroll-to-top */}
                 <button

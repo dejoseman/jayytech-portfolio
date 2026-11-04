@@ -156,4 +156,4 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 ---
 
-Crafted with ⚡ by **Jayy Tech** — Transforming bold ideas into high-impact digital realities.
+Crafted with ⚡ by **Okechukwu Joseph** (Jayy Tech) — Transforming bold ideas into high-impact digital realities.

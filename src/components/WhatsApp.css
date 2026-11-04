@@ -1,0 +1,258 @@
+/* ==========================================================================
+   WhatsApp contact — floating button, header icon, contact CTA
+   Brand green #25D366. Text placed on green uses a deep ink (#06301a) so it
+   passes WCAG AA in both themes; the glyph itself stays white like the app icon.
+   ========================================================================== */
+:root {
+    --wa-green: #25d366;
+    --wa-green-strong: #1ebe5a;
+    --wa-ink: #06301a;
+    --wa-fab-size: 58px;
+    --wa-fab-offset: 1.5rem;
+}
+
+/* ─── Floating action button ─── */
+.wa-fab {
+    position: fixed;
+    right: calc(var(--wa-fab-offset) + env(safe-area-inset-right));
+    bottom: calc(var(--wa-fab-offset) + env(safe-area-inset-bottom));
+    z-index: 1000; /* above content & scroll-top (999), below the mobile drawer (1001+) */
+    width: var(--wa-fab-size);
+    height: var(--wa-fab-size);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--wa-green);
+    color: #fff;
+    text-decoration: none;
+    box-shadow:
+        0 10px 24px -8px rgba(37, 211, 102, 0.55),
+        0 4px 10px -4px rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+    transition:
+        transform 0.3s var(--ease, ease),
+        box-shadow 0.3s var(--ease, ease),
+        background-color 0.2s ease,
+        opacity 0.25s ease,
+        visibility 0.25s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.wa-fab:hover {
+    background: var(--wa-green-strong);
+    transform: translateY(-3px) scale(1.04);
+    box-shadow:
+        0 16px 32px -10px rgba(37, 211, 102, 0.65),
+        0 6px 14px -6px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+
+.wa-fab:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.wa-fab:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 3px var(--bg, #070b1d),
+        0 0 0 6px var(--wa-green);
+}
+
+/* Light theme: a slightly tighter, cooler shadow sits better on the pale background */
+[data-theme="light"] .wa-fab {
+    box-shadow:
+        0 10px 22px -10px rgba(18, 140, 70, 0.55),
+        0 3px 8px -3px rgba(15, 23, 42, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.wa-fab__icon {
+    width: 28px;
+    height: 28px;
+}
+
+.wa-fab--hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(0.85);
+}
+
+/* Tooltip — shown on hover (pointer devices) and on keyboard focus */
+.wa-fab__tooltip {
+    position: absolute;
+    right: calc(100% + 12px);
+    top: 50%;
+    transform: translate(6px, -50%);
+    padding: 0.5rem 0.8rem;
+    border-radius: 10px;
+    background: var(--surface-solid, #0e1430);
+    color: var(--text, #eef1fb);
+    border: 1px solid var(--border-strong, rgba(148, 163, 255, 0.22));
+    box-shadow: var(--shadow-md);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.25s var(--ease, ease), visibility 0.2s;
+}
+
+.wa-fab__tooltip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    width: 9px;
+    height: 9px;
+    background: inherit;
+    border-top: 1px solid var(--border-strong, rgba(148, 163, 255, 0.22));
+    border-right: 1px solid var(--border-strong, rgba(148, 163, 255, 0.22));
+    transform: translateY(-50%) rotate(45deg);
+}
+
+@media (hover: hover) {
+    .wa-fab:hover .wa-fab__tooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(0, -50%);
+    }
+}
+
+.wa-fab:focus-visible .wa-fab__tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, -50%);
+}
+
+/* Scroll-to-top stacks neatly above the WhatsApp button instead of colliding with it */
+.scroll-top-btn {
+    right: calc(var(--wa-fab-offset) + (var(--wa-fab-size) - 46px) / 2 + env(safe-area-inset-right)) !important;
+    bottom: calc(var(--wa-fab-offset) + var(--wa-fab-size) + 0.85rem + env(safe-area-inset-bottom)) !important;
+}
+
+/* ─── Header icon button (desktop only — the floating button covers mobile) ─── */
+.nav-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm, 10px);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-2);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.nav-whatsapp:hover {
+    color: var(--wa-green);
+    border-color: color-mix(in srgb, var(--wa-green) 45%, transparent);
+    background: color-mix(in srgb, var(--wa-green) 10%, transparent);
+}
+
+[data-theme="light"] .nav-whatsapp:hover {
+    color: #128c4a;
+}
+
+/* Social-row variant (hero / footer) */
+.social-btn.social-btn--whatsapp:hover {
+    color: var(--wa-green);
+    border-color: color-mix(in srgb, var(--wa-green) 45%, transparent);
+    background: color-mix(in srgb, var(--wa-green) 10%, transparent);
+}
+
+[data-theme="light"] .social-btn.social-btn--whatsapp:hover {
+    color: #128c4a;
+}
+
+/* ─── Contact section ─── */
+.contact-item-icon--whatsapp {
+    color: #fff !important;
+    background: var(--wa-green) !important;
+    border-color: transparent !important;
+}
+
+.btn-whatsapp {
+    background: var(--wa-green);
+    color: var(--wa-ink);
+    border: 1px solid transparent;
+    font-weight: 700;
+    box-shadow: 0 10px 26px -12px rgba(37, 211, 102, 0.7);
+    text-decoration: none;
+}
+
+.btn-whatsapp:hover {
+    background: var(--wa-green-strong);
+    color: var(--wa-ink);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -12px rgba(37, 211, 102, 0.8);
+}
+
+.btn-whatsapp:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--wa-green);
+}
+
+.contact-whatsapp-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    border-radius: var(--radius, 16px);
+    border: 1px solid color-mix(in srgb, var(--wa-green) 28%, var(--border));
+    background: color-mix(in srgb, var(--wa-green) 6%, var(--surface));
+}
+
+.contact-whatsapp-cta__text {
+    font-size: 0.9rem;
+    color: var(--text-2);
+    line-height: 1.6;
+}
+
+.contact-whatsapp-cta .btn {
+    align-self: flex-start;
+}
+
+/* Drawer CTA */
+.drawer-whatsapp {
+    width: 100%;
+    margin-top: 0.65rem;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 960px) {
+    .nav-whatsapp {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    :root {
+        --wa-fab-size: 54px;
+        --wa-fab-offset: 1rem;
+    }
+
+    .wa-fab__icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    .scroll-top-btn {
+        right: calc(var(--wa-fab-offset) + (var(--wa-fab-size) - 42px) / 2 + env(safe-area-inset-right)) !important;
+    }
+
+    .contact-whatsapp-cta .btn {
+        align-self: stretch;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wa-fab:hover,
+    .btn-whatsapp:hover {
+        transform: none;
+    }
+}
